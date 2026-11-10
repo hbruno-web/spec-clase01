@@ -1,0 +1,26 @@
+- [x] T1 (RF-01) Añadir pruebas de rechazo válido que verifiquen el firmante, motivo, versión, instante y estado Devuelto · 25 min
+- [x] T2 (RF-02) Añadir prueba de rechazo fuera de turno que compruebe el mismo error de aprobación y ausencia de cambios · 20 min
+- [x] T3 (RF-03) Añadir prueba de rechazo fuera de EnCircuito que compruebe el mismo error de estado de aprobación y ausencia de cambios · 20 min
+- [ ] T4 (RF-04) Añadir pruebas para motivo vacío o compuesto por espacios, mensaje requerido y ausencia de cambios · 20 min
+- [ ] T5 (RF-05) Añadir pruebas para conservar espacios extremos y texto largo en motivos válidos · 20 min
+- [ ] T6 (RF-06) Añadir pruebas de historial separado y cronológico con todos los datos de cada rechazo · 25 min
+- [ ] T7 (RF-07) Añadir pruebas de rechazo en la tercera vuelta y de rechazo de reenvío tras el estado terminal · 25 min
+- [ ] T8 (RF-08) Añadir pruebas de reenvío válido: incremento de versión, estado EnCircuito y primer firmante en turno · 25 min
+- [ ] T9 (RF-09) Añadir prueba de reenvío por persona no autora, mensaje requerido y ausencia de cambios · 20 min
+- [ ] T10 (RF-10) Añadir pruebas de reenvío desde estados distintos de Devuelto y ausencia de cambios · 20 min
+- [ ] T11 (RF-11) Añadir pruebas de que firmas anteriores se conservan y no afectan turno ni aprobación de la versión nueva · 25 min
+- [ ] T12 (RF-06) Crear el record Rechazo y exponer la colección pública de rechazos en orden cronológico · 25 min
+- [ ] T13 (RF-01) Añadir Devuelto y Rechazado al enum con documentación XML en español · 20 min
+- [ ] T14 (RF-01) Implementar Rechazar con validación previa y registro del rechazo válido sin cambios parciales · 30 min
+- [ ] T15 (RF-07) Implementar la transición a Rechazado al rechazar en la tercera versión y bloquear el reenvío posterior · 25 min
+- [ ] T16 (RF-08) Implementar Reenviar para autorizar al autor, incrementar versión y reiniciar el turno · 30 min
+- [ ] T17 (RF-09) Implementar y documentar el error específico de reenvío por una persona distinta del autor · 20 min
+- [ ] T18 (RF-10) Implementar la validación de estado para permitir reenvíos únicamente desde Devuelto · 20 min
+- [ ] T19 (RF-11) Ajustar cálculo del turno y aprobación para contar solo firmas de la versión vigente · 30 min
+- [ ] T20 (CF-05) Documentar en español con XML todos los miembros públicos nuevos · 20 min
+- [ ] T21 (CF-02) Verificar que cada requisito tenga al menos una prueba xUnit cuyo nombre incluya su identificador · 20 min
+- [ ] T22 (CF-06) Verificar mediante pruebas la conservación cronológica y completa de rechazos y firmas anteriores · 25 min
+- [ ] T23 (CF-07) Verificar en pruebas estado, versión, turno y ausencia de mutaciones parciales en operaciones inválidas · 25 min
+- [ ] T24 (CF-03) Confirmar que las firmas públicas existentes del constructor, Enviar y Aprobar no cambian · 20 min
+- [ ] T25 (CF-04) Ejecutar y confirmar los cinco tests existentes sin modificarlos · 20 min
+- [ ] T26 (CF-01) Ejecutar dotnet test y resolver cualquier fallo de la suite · 25 min
