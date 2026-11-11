@@ -10,5 +10,11 @@ namespace FirmaDocs;
        EnCircuito,
 
        /// <summary>Todos los firmantes aprobaron la versión vigente.</summary>
-       Aprobado
+       Aprobado,
+
+       /// <summary>El documento fue rechazado y puede ser corregido por su autor.</summary>
+       Devuelto,
+
+       /// <summary>El documento fue rechazado en la última vuelta permitida.</summary>
+       Rechazado
    }
