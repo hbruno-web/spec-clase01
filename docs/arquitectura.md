@@ -1,0 +1,1 @@
+capas (consola → dominio → repositorios, hoy sin persistencia), una carpeta por capacidad (`FirmaDocs/Circuito/`), sin lógica en `Program.cs`, errores de dominio con `CircuitoFirmaException`, instante inyectado como `DateTimeOffset`.

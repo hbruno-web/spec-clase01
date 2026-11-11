@@ -1,0 +1,39 @@
+schema: spec-driven
+
+context: |
+  Proyecto: FirmaDocs (firmas digitales con circuitos de firma). Leer siempre AGENTS.md y docs/constitution.md.
+     Negocio: docs/negocio.md · Stack: docs/stack.md · Arquitectura: docs/arquitectura.md
+     Copilot: no cambiar firmas públicas; XML docs en español; dotnet test antes de cerrar una tarea.
+rules:
+  proposal:
+    - "Incluir sección 'Fuera de alcance' explícita y 'Preguntas abiertas'"
+  specs:
+   - "Requisitos en notación EARS con id RF-nn: encabezado '### Requirement: RF-nn <nombre>'"
+   - "Al menos un escenario por requisito: encabezado '#### Scenario: <nombre>' (4 almohadillas) con pasos **GIVEN** / **WHEN** / **THEN** (palabra clave en inglés, texto en español)"
+   - "Sin detalles de implementación"
+  design:
+   - "Listar alternativas descartadas y por qué"
+   - "Nombrar tipos nuevos y módulos afectados"  
+  tasks:
+  - "Tareas de 20-30 min; cada tarea cita su RF; tests antes o junto con el código"
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

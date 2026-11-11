@@ -1,0 +1,1 @@
+glosario mínimo (documento, versión, autor, firmante, firma, rechazo, circuito de firma, vuelta) y las reglas vigentes: rechazo con motivo obligatorio; máximo 3 vueltas; un firmante no se repite en el circuito; las firmas de versiones anteriores no aprueban la vigente; el historial nunca se borra (ver `specs/001_rechazo_y_vueltas`).
