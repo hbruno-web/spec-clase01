@@ -10,6 +10,7 @@ public sealed class CircuitoFirma
     private readonly List<Firmante> _firmantes;
     private readonly List<Firma> _firmas = [];
     private readonly List<Rechazo> _rechazos = [];
+    private readonly Dictionary<string, DateTimeOffset> _turnosActivos = new(StringComparer.Ordinal);
 
     /// <summary>Crea el circuito de un documento en estado <see cref="EstadoDocumento.Borrador"/>.</summary>
     /// <param name="documentoId">Identificador del documento.</param>
@@ -116,6 +117,34 @@ public sealed class CircuitoFirma
         Estado = EstadoDocumento.EnCircuito;
     }
 
+    /// <summary>Envía el documento a firma y registra la recepción del primer turno.</summary>
+    /// <param name="instante">Momento en que los firmantes de la primera etapa reciben el turno.</param>
+    /// <exception cref="CircuitoFirmaException">El documento no está en borrador.</exception>
+    public void Enviar(DateTimeOffset instante)
+    {
+        Enviar();
+        RegistrarRecepcionTurnos(FirmantesPendientes, instante);
+    }
+
+    /// <summary>Indica si el turno activo del firmante venció en el instante consultado.</summary>
+    /// <param name="firmante">Firmante cuyo turno activo se consulta.</param>
+    /// <param name="instante">Instante en el que se evalúa el vencimiento.</param>
+    /// <returns><see langword="true"/> si han transcurrido dos días hábiles desde la recepción.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="firmante"/> es <see langword="null"/>.</exception>
+    /// <exception cref="CircuitoFirmaException">El firmante no tiene turno activo o no se registró su recepción.</exception>
+    public bool EstaVencido(Firmante firmante, DateTimeOffset instante)
+    {
+        ArgumentNullException.ThrowIfNull(firmante);
+
+        if (!FirmantesPendientes.Any(pendiente => pendiente.Id == firmante.Id))
+            throw new CircuitoFirmaException($"No hay un turno activo para {firmante.Nombre}.");
+        if (!_turnosActivos.TryGetValue(firmante.Id, out var recibidoEn))
+            throw new CircuitoFirmaException(
+                $"No hay un instante de recepción registrado para el turno de {firmante.Nombre}.");
+
+        return instante >= CalendarioLaboralPeruLima.CalcularVencimiento(recibidoEn);
+    }
+
     /// <summary>Registra la aprobación del firmante en turno.</summary>
     /// <param name="firmante">Firmante que aprueba.</param>
     /// <param name="instante">Momento de la aprobación.</param>
@@ -129,10 +158,32 @@ public sealed class CircuitoFirma
         if (!FirmantesPendientes.Any(pendiente => pendiente.Id == firmante.Id))
             throw new CircuitoFirmaException($"No es el turno de {firmante.Nombre}.");
 
+        var pendientesAntes = FirmantesPendientes
+            .Select(pendiente => pendiente.Id)
+            .ToHashSet(StringComparer.Ordinal);
         _firmas.Add(new Firma(firmante, Version, instante));
+        _turnosActivos.Remove(firmante.Id);
 
         if (EtapaActiva is null)
+        {
             Estado = EstadoDocumento.Aprobado;
+            _turnosActivos.Clear();
+            return;
+        }
+
+        var pendientesDespues = FirmantesPendientes;
+        var idsPendientesDespues = pendientesDespues
+            .Select(pendiente => pendiente.Id)
+            .ToHashSet(StringComparer.Ordinal);
+
+        foreach (var id in _turnosActivos.Keys.Where(id => !idsPendientesDespues.Contains(id)).ToArray())
+            _turnosActivos.Remove(id);
+
+        foreach (var pendiente in pendientesDespues)
+        {
+            if (!pendientesAntes.Contains(pendiente.Id))
+                _turnosActivos[pendiente.Id] = instante;
+        }
     }
 
     /// <summary>Registra el rechazo del firmante habilitado en la etapa activa.</summary>
@@ -153,6 +204,7 @@ public sealed class CircuitoFirma
 
         _rechazos.Add(new Rechazo(firmante, motivo, Version, instante));
         Estado = Version == MaximoVueltas ? EstadoDocumento.Rechazado : EstadoDocumento.Devuelto;
+        _turnosActivos.Clear();
     }
 
     /// <summary>Reenvía una versión devuelta e inicia una nueva vuelta desde la primera etapa.</summary>
@@ -167,6 +219,17 @@ public sealed class CircuitoFirma
 
         Version++;
         Estado = EstadoDocumento.EnCircuito;
+        _turnosActivos.Clear();
+    }
+
+    /// <summary>Reenvía la versión devuelta y registra la recepción del primer turno de la nueva vuelta.</summary>
+    /// <param name="solicitanteId">Identificador de la persona que solicita el reenvío.</param>
+    /// <param name="instante">Momento en que los firmantes de la primera etapa reciben el turno.</param>
+    /// <exception cref="CircuitoFirmaException">La persona no es el autor o el documento no está devuelto.</exception>
+    public void Reenviar(string solicitanteId, DateTimeOffset instante)
+    {
+        Reenviar(solicitanteId);
+        RegistrarRecepcionTurnos(FirmantesPendientes, instante);
     }
 
     private EtapaFirma? EtapaActiva
@@ -184,4 +247,10 @@ public sealed class CircuitoFirma
             .Where(firma => firma.Version == Version)
             .Select(firma => firma.Firmante.Id)
             .ToHashSet(StringComparer.Ordinal);
+
+    private void RegistrarRecepcionTurnos(IEnumerable<Firmante> firmantes, DateTimeOffset instante)
+    {
+        foreach (var firmante in firmantes)
+            _turnosActivos[firmante.Id] = instante;
+    }
 }

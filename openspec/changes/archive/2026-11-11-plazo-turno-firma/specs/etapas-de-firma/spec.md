@@ -21,21 +21,31 @@ CUANDO se activa un turno de firma con un instante de recepción conocido, el si
 - **THEN** el sistema conserva el instante original de activación de la etapa
 
 ### Requirement: RF-19 Consulta de vencimiento del turno
-CUANDO se consulte un turno con instante de recepción conocido, el sistema DEBERÁ (SHALL) indicar si está vencido comparando el instante consultado con la recepción más dos días calendario, incluyendo fines de semana y feriados.
+CUANDO se consulte un turno con instante de recepción conocido, el sistema DEBERÁ (SHALL) indicar que está vencido desde el mismo horario local del segundo día hábil posterior a la recepción, contando de lunes a viernes y excluyendo sábados, domingos y feriados oficiales aplicables en Lima, Perú.
 
 #### Scenario: Consulta antes del vencimiento
-- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00
-- **WHEN** se consulta el vencimiento antes del domingo 15 de noviembre de 2026 a las 10:00
+- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00, hora local de Lima
+- **WHEN** se consulta el vencimiento el lunes 16 de noviembre de 2026 a las 10:00
 - **THEN** el sistema indica que el turno no está vencido
 
 #### Scenario: Consulta exactamente al vencimiento
-- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00
-- **WHEN** se consulta el domingo 15 de noviembre de 2026 a las 10:00
+- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00, hora local de Lima
+- **WHEN** se consulta el martes 17 de noviembre de 2026 a las 10:00
 - **THEN** el sistema indica que el turno está vencido
 
 #### Scenario: Consulta después del vencimiento
-- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00
-- **WHEN** se consulta después del domingo 15 de noviembre de 2026 a las 10:00
+- **GIVEN** el turno se recibió el viernes 13 de noviembre de 2026 a las 10:00, hora local de Lima
+- **WHEN** se consulta después del martes 17 de noviembre de 2026 a las 10:00
+- **THEN** el sistema indica que el turno está vencido
+
+#### Scenario: Turno recibido en sábado
+- **GIVEN** el turno se recibió el sábado 14 de noviembre de 2026 a las 10:00, hora local de Lima
+- **WHEN** se consulta el martes 17 de noviembre de 2026 a las 10:00
+- **THEN** el sistema indica que el turno está vencido
+
+#### Scenario: Feriados oficiales no cuentan como días hábiles
+- **GIVEN** el turno se recibió el lunes 7 de diciembre de 2026 a las 10:00, hora local de Lima, y el martes 8 y miércoles 9 son feriados oficiales aplicables
+- **WHEN** se consulta el viernes 11 de diciembre de 2026 a las 10:00
 - **THEN** el sistema indica que el turno está vencido
 
 #### Scenario: Turno sin instante de recepción
