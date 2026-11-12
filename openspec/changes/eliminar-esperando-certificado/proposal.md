@@ -35,7 +35,7 @@ Ninguna.
 
 - Código legado: `EstadoSolicitud`, `EstadoSolicitudTexto`, `BandejaFirmante`, `RecordatorioService` y `ReporteSla`.
 - Base de datos: `db/schema.sql`, migraciones y `db/seed.sql`; el cambio debe conservar la integridad y los demás datos de las solicitudes migradas.
-- Contratos públicos: el miembro del enum `EstadoSolicitud.EsperandoCertificado` deja de estar disponible. `Bandeja.EsperandoCertificado` también es un miembro público; su compatibilidad debe resolverse antes de cambiar la forma del record.
+- Contratos públicos: el miembro del enum `EstadoSolicitud.EsperandoCertificado` deja de estar disponible. `Bandeja.EsperandoCertificado` se conserva por compatibilidad y quedará vacío tras la migración.
 - Métricas: el SLA incluirá estas solicitudes en el periodo de su `creada_en` original, siguiendo el tratamiento actual de `PENDIENTE`.
 
 ## Fuera de alcance
@@ -47,5 +47,7 @@ Ninguna.
 
 ## Preguntas abiertas
 
-- ¿Se confirma que las filas preexistentes con `ESPERANDO_CERTIFICADO` deben pasar a `PENDIENTE`, conservar sus demás datos y registrar `migrado_desde = 'ESPERANDO_CERTIFICADO'`, tanto en bases ya desplegadas como en los datos del seed?
-- Dado que no deben cambiarse firmas públicas existentes, ¿se conserva `Bandeja.EsperandoCertificado` por compatibilidad aunque deje de recibir solicitudes, o se autoriza modificar ese contrato público?
+No quedan preguntas abiertas. Se confirman estas decisiones:
+
+- Migrar las filas existentes y las del seed a `PENDIENTE`, conservando `migrado_desde = 'ESPERANDO_CERTIFICADO'`.
+- Conservar `Bandeja.EsperandoCertificado` por compatibilidad, aunque no reciba solicitudes.

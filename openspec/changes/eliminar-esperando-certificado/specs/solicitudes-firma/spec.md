@@ -3,8 +3,8 @@
 ## REMOVED Requirements
 
 ### Requirement: RF-02 Estado ESPERANDO_CERTIFICADO
-**Reason**: El estado se elimina; las solicitudes que lo usaban pasan a `PENDIENTE`.
-**Migration**: Cambiar las filas existentes a `PENDIENTE`, conservar sus demás datos y establecer `migrado_desde` en `ESPERANDO_CERTIFICADO`.
+**Reason**: El estado deja de ser admitido; las solicitudes existentes se convierten en `PENDIENTE`.
+**Migration**: Migrar las solicitudes persistidas con ese estado conforme a RF-08 antes de rechazar el valor retirado en nuevas escrituras.
 
 ## MODIFIED Requirements
 
@@ -29,41 +29,22 @@ CUANDO se cambie el estado de una solicitud, el sistema DEBERÁ (SHALL) permitir
 - **WHEN** se cambia su estado a `Pendiente`
 - **THEN** el sistema persiste el nuevo estado sin rechazar el cambio por la transición
 
-#### Scenario: Cambio entre estados reconocidos
+#### Scenario: Cambio entre estados no finales
 - **GIVEN** una solicitud está en estado `Pendiente`
 - **WHEN** se cambia a cualquier estado reconocido
 - **THEN** el sistema persiste el nuevo estado sin validar la combinación del estado anterior y el nuevo
 
+#### Scenario: Cambio entre estados finales
+- **GIVEN** una solicitud está en estado `Firmada`, `Rechazada` o `Expirada`
+- **WHEN** se cambia a otro de esos estados
+- **THEN** el sistema persiste el nuevo estado sin rechazar el cambio por la transición
+
 ## ADDED Requirements
 
 ### Requirement: RF-08 Migración de solicitudes que esperan certificado
-CUANDO se migren solicitudes persistidas con el estado retirado, el sistema DEBERÁ (SHALL) cambiarlas a `PENDIENTE`, conservar los demás datos y registrar su procedencia en `migrado_desde`.
+CUANDO se ejecute la migración, el sistema DEBERÁ (SHALL) mapear cada solicitud en `ESPERANDO_CERTIFICADO` a `PENDIENTE` y conservar una marca de auditoría en `migrado_desde`.
 
-#### Scenario: Migrar una solicitud existente
-- **GIVEN** una solicitud persistida tiene estado `ESPERANDO_CERTIFICADO`
-- **WHEN** se aplica la migración
-- **THEN** su estado pasa a `PENDIENTE`, sus demás datos se conservan y `migrado_desde` queda establecido en `ESPERANDO_CERTIFICADO`
-
-### Requirement: RF-09 Aviso de instalación de certificado
-CUANDO se procesen solicitudes para enviar recordatorios, el sistema DEBERÁ (SHALL) dejar de enviar el aviso «Instala tu certificado digital» asociado al estado retirado.
-
-#### Scenario: Solicitud migrada procesada por recordatorios
-- **GIVEN** una solicitud que estaba en `ESPERANDO_CERTIFICADO` fue migrada a `PENDIENTE`
-- **WHEN** se procesan sus recordatorios
-- **THEN** el sistema no envía el aviso «Instala tu certificado digital»
-
-### Requirement: RF-10 Inclusión de solicitudes migradas en el SLA
-CUANDO se calcule el SLA de solicitudes, el sistema DEBERÁ (SHALL) incluir las solicitudes migradas en el periodo correspondiente a su `creada_en` original, aplicando el tratamiento vigente para `PENDIENTE`.
-
-#### Scenario: Solicitud migrada incluida en su periodo original
-- **GIVEN** una solicitud migrada tiene estado `PENDIENTE` y una fecha `creada_en` original
-- **WHEN** se calcula el SLA del periodo de creación de esa solicitud
-- **THEN** la solicitud se incluye en el cálculo de ese periodo
-
-### Requirement: RF-11 Clasificación de solicitudes migradas
-CUANDO se clasifiquen las solicitudes de un firmante, el sistema DEBERÁ (SHALL) clasificar como pendientes las solicitudes migradas a `PENDIENTE` y no como solicitudes que esperan certificado.
-
-#### Scenario: Solicitud migrada clasificada como pendiente
-- **GIVEN** una solicitud que estaba en `ESPERANDO_CERTIFICADO` fue migrada a `PENDIENTE`
-- **WHEN** se clasifican las solicitudes del firmante
-- **THEN** la solicitud se incluye entre las solicitudes por firmar y no entre las que esperan certificado
+#### Scenario: Migrar una solicitud que espera certificado
+- **GIVEN** una solicitud persistida tiene el estado `ESPERANDO_CERTIFICADO`
+- **WHEN** se ejecuta la migración
+- **THEN** su estado pasa a `PENDIENTE`, `migrado_desde` queda establecido en `ESPERANDO_CERTIFICADO` y los demás datos de la solicitud se conservan
