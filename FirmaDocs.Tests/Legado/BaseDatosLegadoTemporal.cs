@@ -49,8 +49,8 @@ INSERT INTO solicitudes_firma
 VALUES
     (1, 'DOC-001', 'ana@empresa.pe', 1, '2026-01-01T09:00:00-05:00', NULL, 'PENDIENTE', NULL),
     (2, 'DOC-002', 'ana@empresa.pe', 1, '2026-03-09T09:00:00-05:00', NULL, 'PENDIENTE', NULL),
-    (3, 'DOC-003', 'ana@empresa.pe', 1, '2026-01-05T09:00:00-05:00', NULL, 'ESPERANDO_CERTIFICADO', NULL),
-    (4, 'DOC-004', 'ana@empresa.pe', 1, '2026-02-01T09:00:00-05:00', NULL, 'ESPERANDO_CERTIFICADO', NULL),
+    (3, 'DOC-003', 'ana@empresa.pe', 1, '2026-01-05T09:00:00-05:00', NULL, 'PENDIENTE', 'ESPERANDO_CERTIFICADO'),
+    (4, 'DOC-004', 'ana@empresa.pe', 1, '2026-02-01T09:00:00-05:00', NULL, 'PENDIENTE', 'ESPERANDO_CERTIFICADO'),
     (5, 'DOC-005', 'ana@empresa.pe', 1, '2026-01-02T09:00:00-05:00', '2026-01-03T09:00:00-05:00', 'FIRMADA', NULL),
     (6, 'DOC-006', 'ana@empresa.pe', 1, '2026-01-04T09:00:00-05:00', '2026-01-06T09:00:00-05:00', 'RECHAZADA', NULL),
     (7, 'DOC-007', 'ana@empresa.pe', 1, '2026-03-01T09:00:00-05:00', '2026-03-02T09:00:00-05:00', 'EXPIRADA', NULL),

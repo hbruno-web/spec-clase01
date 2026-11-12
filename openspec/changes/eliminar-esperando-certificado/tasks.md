@@ -12,7 +12,7 @@
 
 ## 3. Actualizar los consumidores y verificar el comportamiento (RF-08)
 
-- [ ] 3.1 Agregar pruebas y actualizar `BandejaFirmante`, `RecordatorioService` y `ReporteSla` para tratar las solicitudes convertidas como pendientes, conservar `Bandeja.EsperandoCertificado` vacía y mantener el periodo original del SLA; verificar los escenarios de consumidores descritos en el diseño.
+- [x] 3.1 Agregar pruebas y actualizar `BandejaFirmante`, `RecordatorioService` y `ReporteSla` para tratar las solicitudes convertidas como pendientes, conservar `Bandeja.EsperandoCertificado` vacía y mantener el periodo original del SLA; verificar los escenarios de consumidores descritos en el diseño.
 
 ## 4. Verificación integrada
 

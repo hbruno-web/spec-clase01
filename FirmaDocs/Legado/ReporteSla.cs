@@ -4,7 +4,7 @@ namespace FirmaDocs.Legado;
 // solicitud y se resuelve, agrupado por mes de creación ("yyyy-MM").
 public class ReporteSla
 {
-    // ESPERANDO_CERTIFICADO no cuenta: el reloj no corre hasta tener certificado.
+    // Las solicitudes migradas se cuentan en el mes de su creación original.
     private static readonly string[] EstadosQueCuentan = { "PENDIENTE", "FIRMADA", "RECHAZADA", "EXPIRADA" };
 
     private readonly SolicitudFirmaRepository _repo;
