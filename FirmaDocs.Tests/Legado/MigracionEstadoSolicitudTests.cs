@@ -22,6 +22,16 @@ public class MigracionEstadoSolicitudTests
 
             Ejecutar(connection, File.ReadAllText(Path.Combine(raiz, "db", "schema.sql")));
             Ejecutar(connection, File.ReadAllText(Path.Combine(raiz, "db", "seed.sql")));
+
+            Assert.Equal(1000, Contar(connection, "SELECT COUNT(*) FROM solicitudes_firma;"));
+            Assert.Equal(250, Contar(
+                connection,
+                "SELECT COUNT(*) FROM solicitudes_firma WHERE migrado_desde = 'ESPERANDO_CERTIFICADO';"));
+            Assert.Equal(0, Contar(
+                connection,
+                "SELECT COUNT(*) FROM solicitudes_firma WHERE estado = 'ESPERANDO_CERTIFICADO';"));
+
+            PrepararDatosLegados(connection);
             Ejecutar(connection, "CREATE TEMP TABLE solicitudes_firma_original AS SELECT * FROM solicitudes_firma;");
 
             var filasIniciales = Contar(connection, "SELECT COUNT(*) FROM solicitudes_firma_original;");
@@ -74,6 +84,11 @@ WHERE actual.id IS NULL
             Assert.Equal(0, marcadasConEstadoIncorrecto);
             Assert.Equal(0, filasPerdidasOCambiadas);
             Assert.Equal(1, indiceConservado);
+            Assert.Throws<SqliteException>(() => Ejecutar(connection, @"
+INSERT INTO solicitudes_firma
+    (id, documento_id, firmante_email, vuelta, creada_en, resuelta_en, estado, migrado_desde)
+VALUES
+    (1001, 'DOC-INVALIDO', 'ana@empresa.pe', 1, '2026-11-11T12:00:00+00:00', NULL, 'ESPERANDO_CERTIFICADO', NULL);"));
 
             var rollback = File.ReadAllText(Path.Combine(
                 raiz,
@@ -125,6 +140,38 @@ WHERE actual.id IS NULL
         using var command = connection.CreateCommand();
         command.CommandText = sql;
         command.ExecuteNonQuery();
+    }
+
+    private static void PrepararDatosLegados(SqliteConnection connection)
+    {
+        Ejecutar(connection, @"
+BEGIN TRANSACTION;
+CREATE TABLE solicitudes_firma_legada (
+  id INTEGER PRIMARY KEY,
+  documento_id TEXT NOT NULL,
+  firmante_email TEXT NOT NULL,
+  vuelta INTEGER NOT NULL DEFAULT 1,
+  creada_en TEXT NOT NULL,
+  resuelta_en TEXT NULL,
+  estado TEXT NOT NULL CHECK (estado IN ('PENDIENTE','ESPERANDO_CERTIFICADO','FIRMADA','RECHAZADA','EXPIRADA')),
+  migrado_desde TEXT NULL
+);
+INSERT INTO solicitudes_firma_legada
+  (id, documento_id, firmante_email, vuelta, creada_en, resuelta_en, estado, migrado_desde)
+SELECT
+  id,
+  documento_id,
+  firmante_email,
+  vuelta,
+  creada_en,
+  resuelta_en,
+  CASE WHEN migrado_desde = 'ESPERANDO_CERTIFICADO' THEN 'ESPERANDO_CERTIFICADO' ELSE estado END,
+  CASE WHEN migrado_desde = 'ESPERANDO_CERTIFICADO' THEN NULL ELSE migrado_desde END
+FROM solicitudes_firma;
+DROP TABLE solicitudes_firma;
+ALTER TABLE solicitudes_firma_legada RENAME TO solicitudes_firma;
+CREATE INDEX ix_solicitudes_estado ON solicitudes_firma(estado);
+COMMIT;");
     }
 
     private static int Contar(SqliteConnection connection, string sql)

@@ -16,4 +16,4 @@
 
 ## 4. Verificación integrada
 
-- [ ] 4.1 Ejecutar `dotnet build` y `dotnet test`, y verificar en una base de prueba que la migración conserva filas, columnas e índice, rechaza el estado retirado y deja intactos los estados no afectados (RF-06, RF-08).
+- [x] 4.1 Ejecutar `dotnet build` y `dotnet test`, y verificar en una base de prueba que la migración conserva filas, columnas e índice, rechaza el estado retirado y deja intactos los estados no afectados (RF-06, RF-08).
