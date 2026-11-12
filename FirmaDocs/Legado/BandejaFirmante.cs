@@ -25,8 +25,6 @@ public class BandejaFirmante
         {
             if (s.Estado == EstadoSolicitud.Pendiente)
                 porFirmar.Add(s);
-            else if (s.Estado == EstadoSolicitud.EsperandoCertificado)
-                esperando.Add(s); // seccion "Esperando certificado"
             else
                 historial.Add(s);
         }

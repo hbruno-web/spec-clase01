@@ -27,13 +27,6 @@ public class RecordatorioService
             }
         }
 
-        foreach (var s in _repo.Listar(EstadoSolicitud.EsperandoCertificado))
-        {
-            // a estos se les avisa siempre, sin importar la antigüedad
-            _canal.Enviar(s.FirmanteEmail, "Instala tu certificado digital para firmar: " + s.DocumentoId);
-            enviados++;
-        }
-
         return enviados;
     }
 }

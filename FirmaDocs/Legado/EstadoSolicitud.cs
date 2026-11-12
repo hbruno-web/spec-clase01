@@ -5,7 +5,6 @@ namespace FirmaDocs.Legado;
 public enum EstadoSolicitud
 {
     Pendiente,
-    EsperandoCertificado,
     Firmada,
     Rechazada,
     Expirada
@@ -18,7 +17,6 @@ public static class EstadoSolicitudTexto
         switch (estado)
         {
             case EstadoSolicitud.Pendiente: return "PENDIENTE";
-            case EstadoSolicitud.EsperandoCertificado: return "ESPERANDO_CERTIFICADO";
             case EstadoSolicitud.Firmada: return "FIRMADA";
             case EstadoSolicitud.Rechazada: return "RECHAZADA";
             case EstadoSolicitud.Expirada: return "EXPIRADA";
@@ -31,7 +29,6 @@ public static class EstadoSolicitudTexto
         switch (texto)
         {
             case "PENDIENTE": return EstadoSolicitud.Pendiente;
-            case "ESPERANDO_CERTIFICADO": return EstadoSolicitud.EsperandoCertificado;
             case "FIRMADA": return EstadoSolicitud.Firmada;
             case "RECHAZADA": return EstadoSolicitud.Rechazada;
             case "EXPIRADA": return EstadoSolicitud.Expirada;
