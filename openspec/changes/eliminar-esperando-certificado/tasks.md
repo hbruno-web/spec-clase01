@@ -7,7 +7,7 @@
 
 ## 2. Migrar las solicitudes existentes (RF-08)
 
-- [ ] 2.1 Crear la migración SQLite transaccional e idempotente que reconstruye `solicitudes_firma`, convierte el estado retirado en `PENDIENTE`, conserva los demás datos y el índice, y proporciona su rollback; verificar dos ejecuciones consecutivas y rollback sobre una copia de la base.
+- [x] 2.1 Crear la migración SQLite transaccional e idempotente que reconstruye `solicitudes_firma`, convierte el estado retirado en `PENDIENTE`, conserva los demás datos y el índice, y proporciona su rollback; verificar dos ejecuciones consecutivas y rollback sobre una copia de la base.
 - [ ] 2.2 Alinear `db/schema.sql` y `db/seed.sql` con los estados admitidos y la marca de procedencia definida; verificar que el seed carga bajo el esquema nuevo y conserva la marca en los registros convertidos.
 
 ## 3. Actualizar los consumidores y verificar el comportamiento (RF-08)
