@@ -11,6 +11,7 @@
 - Namespace `FirmaDocs` (código) y `FirmaDocs.Tests.<Carpeta>` (tests); un tipo por archivo; una carpeta por capacidad (`FirmaDocs/Circuito/`).
 - Nullable habilitado; records para valores; `DateTimeOffset` para instantes, siempre inyectado.
 - XML docs en español en todo miembro público. Tests: `Metodo_Escenario_Resultado` con el id del RF al final (`..._RF03`).
+- Excepción: tests de caracterización de código legado → `Caracterizacion_<Clase>_<Escenario>` en `FirmaDocs.Tests/Legado/`, sin id de RF. Fijan el comportamiento actual.
 
 ## Límites
 
