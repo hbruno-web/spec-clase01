@@ -2,7 +2,7 @@
 
 ## 1. Retirar el estado del modelo y la persistencia (RF-06, RF-07)
 
-- [ ] 1.1 Agregar pruebas para los cuatro estados admitidos, el rechazo de `ESPERANDO_CERTIFICADO` y los cambios entre estados reconocidos sin validar transiciones; verificar que las pruebas cubren RF-06 y RF-07.
+- [x] 1.1 Agregar pruebas para los cuatro estados admitidos, el rechazo de `ESPERANDO_CERTIFICADO` y los cambios entre estados reconocidos sin validar transiciones; verificar que las pruebas cubren RF-06 y RF-07.
 - [ ] 1.2 Retirar `ESPERANDO_CERTIFICADO` de `EstadoSolicitud` y `EstadoSolicitudTexto` y mantener la persistencia limitada a los estados reconocidos; verificar con las pruebas de RF-06 y RF-07.
 
 ## 2. Migrar las solicitudes existentes (RF-08)
